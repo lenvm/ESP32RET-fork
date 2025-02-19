@@ -69,7 +69,7 @@ void SerialConsole::printMenu()
     Serial.println("Config Commands (enter command=newvalue). Current values shown in parenthesis:");
     Serial.println();
 
-    Logger::console("SYSTYPE=%i - Set board type (0=Macchina A0, 1=EVTV ESP32 Board 2=Macchina A5)", settings.systemType);
+    Logger::console("SYSTYPE=%i - Set board type (0=Macchina A0, 1=EVTV ESP32 Board, 2=Macchina A5, 3=EVTV ESP32-S3, 4=ESP32 DevKit)", settings.systemType);
     Logger::console("LOGLEVEL=%i - set log level (0=debug, 1=info, 2=warn, 3=error, 4=off)", settings.logLevel);
     Serial.println();
 

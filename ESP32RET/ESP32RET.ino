@@ -27,6 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include "config.h"
+#include "config_mcp251x.h"
 #include "src/lib/esp32_can/src/esp32_can.h"
 #include <SPI.h>
 #include "src/lib/esp32_mcp2515/src/esp32_mcp2515.h"
@@ -94,7 +95,7 @@ void loadSettings()
     settings.enableBT = nvPrefs.getBool("enable-bt", false);
     settings.enableLawicel = nvPrefs.getBool("enableLawicel", true);
 
-    uint8_t defaultVal = (espChipRevision > 2) ? 0 : 1; //0 = A0, 1 = EVTV ESP32
+    uint8_t defaultVal = 4; // Set default systemType to 4. //(espChipRevision > 2) ? 0 : 1; //0 = A0, 1 = EVTV ESP32
 #ifdef CONFIG_IDF_TARGET_ESP32S3
     defaultVal = 3;
 #endif
@@ -239,6 +240,34 @@ void loadSettings()
         strcpy(otaFilename, "/esp32s3ret.bin");
     }
 
+    if (settings.systemType == 4)
+    {
+        Logger::console("Running on ESP32 DevKit");
+        canBuses[0] = &CAN0;
+        canBuses[1] = &CAN1; // setup as CAN1, as an instance of CAN1 is expected by the rest of the code, and to circumvent having to use setCSPin(), which triggers a warning
+        canBuses[2] = new MCP2517FD(PIN_CAN2_CS, PIN_CAN2_INT); // setup as new MCP2517FD, as this is most abstracted. Can also be set up as CAN2, by initiating CAN2 in mcp2517fd.cpp
+
+        //reconfigure the two already defined CAN buses to use the actual pins for this board.
+        CAN0.setCANPins(PIN_CAN0_RXD1, PIN_CAN0_TXD1); //rx, tx - This is the SWCAN interface
+
+        SysSettings.LED_CANTX = 255;
+        SysSettings.LED_CANRX = 255;
+        SysSettings.LED_LOGGING = 255;
+        SysSettings.LED_CONNECTION_STATUS = 255;
+        SysSettings.fancyLED = false;
+        SysSettings.logToggle = false;
+        SysSettings.txToggle = true;
+        SysSettings.rxToggle = true;
+        SysSettings.lawicelAutoPoll = false;
+        SysSettings.lawicelMode = false;
+        SysSettings.lawicellExtendedMode = false;
+        SysSettings.lawicelTimestamping = false;
+        SysSettings.numBuses = 3;
+        SysSettings.isWifiActive = false;
+        SysSettings.isWifiConnected = false;
+        strcpy(deviceName, DEVKIT_NAME);
+    }
+
     if (nvPrefs.getString("SSID", settings.SSID, 32) == 0)
     {
         strcpy(settings.SSID, deviceName);
@@ -249,6 +278,7 @@ void loadSettings()
     {
         strcpy(settings.WPA2Key, "aBigSecret");
     }
+
     if (nvPrefs.getString("btname", settings.btName, 32) == 0)
     {
         strcpy(settings.btName, "ELM327-");
@@ -268,6 +298,34 @@ void loadSettings()
         settings.canSettings[i].fdSpeed = nvPrefs.getUInt(buff, 5000000);
         sprintf(buff, "can%i-fdmode", i);
         settings.canSettings[i].fdMode = nvPrefs.getBool(buff, false);
+    }
+
+    // DevKit specific default settings, if values are not set in nvPrefs
+    if (settings.systemType == 4) {
+      if (nvPrefs.isKey("can0_en") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        settings.canSettings[0].enabled = false;  // Disable CAN0 (SN65HVD230)
+      }
+      if (nvPrefs.isKey("can1_en") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        settings.canSettings[1].enabled = false;  // Disable CAN1 (MCP2515)
+      }
+      if (nvPrefs.isKey("can2_en") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        settings.canSettings[2].enabled = true;  // Enable CAN2 (MCP2518FD)
+      }
+      if (nvPrefs.isKey("can2-fdmode") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        settings.canSettings[2].fdMode = true;  // Set CAN2 (MCP2518FD) to FD mode
+      }
+      if (nvPrefs.isKey("can2-fdspeed") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        settings.canSettings[2].fdSpeed = 2000000;  // Set CAN2 (MCP2518FD) payload data rate to 2 Mbit/s
+      }
+      if (nvPrefs.isKey("SSID") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        nvPrefs.putString("SSID", settings.SSID);  // Put default name in nvPrefs
+      }
+      if (nvPrefs.isKey("wpa2Key") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        nvPrefs.putString("wpa2Key", settings.WPA2Key);  // Put default name in nvPrefs
+      }
+      if (nvPrefs.isKey("btname") == false) {  // If isKey returns false, because no value is found in nvPrefs
+        nvPrefs.putString("btname", settings.btName);  // Put default name in nvPrefs
+      }
     }
 
     nvPrefs.end();
