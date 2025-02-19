@@ -67,17 +67,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //It's not even used on this hardware currently. But, slows down the blinks to make them more visible
 #define BLINK_SLOWNESS  100 
 
-#define A0_LED_PIN     2
+#define A0_LED_PIN     GPIO_NUM_2
 #define A0_NUM_LEDS    1
-#define A5_LED_PIN     15
+#define A5_LED_PIN     GPIO_NUM_15
 #define A5_NUM_LEDS    4
 #define BRIGHTNESS  190
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
 
-#define SW_EN     2
-#define SW_MODE0  26
-#define SW_MODE1  27
+#define SW_EN     GPIO_NUM_2
+#define SW_MODE0  GPIO_NUM_26
+#define SW_MODE1  GPIO_NUM_27
 
 //How many devices to allow to connect to our WiFi telnet port?
 #define MAX_CLIENTS 1
@@ -103,7 +103,7 @@ struct EEPROMSettings {
     boolean useBinarySerialComm; //use a binary protocol on the serial link or human readable format?
 
     uint8_t logLevel; //Level of logging to output on serial line
-    uint8_t systemType; //0 = A0RET, 1 = EVTV ESP32 Board, 2 = Macchine 5-CAN board
+    uint8_t systemType; //0 = A0RET, 1 = EVTV ESP32 Board, 2 = Macchina 5-CAN board, 3 = EVTV ESP32-S3 Board
     
     boolean enableBT; //are we enabling bluetooth too?
     char btName[32];
