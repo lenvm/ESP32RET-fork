@@ -8,3 +8,4 @@
 [submodule "ESP32RET/src/lib/esp32_mcp2517fd"]
 	path = ESP32RET/src/lib/esp32_mcp2517fd
 	url = https://github.com/lenvm/esp32_mcp2517fd-fork.git
+	branch = develop

@@ -34,7 +34,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "config.h"
 #include "Logger.h"
 #include "utility.h"
-#include "esp32_can.h"
+#include "lib/esp32_can/src/esp32_can.h"
 #include "can_manager.h"
 #ifndef CONFIG_IDF_TARGET_ESP32S3
 //#include "BluetoothSerial.h"

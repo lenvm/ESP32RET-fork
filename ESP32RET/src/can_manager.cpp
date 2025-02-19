@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "can_manager.h"
-#include "esp32_can.h"
+#include "lib/esp32_can/src/esp32_can.h"
 #include "config.h"
 #include "SerialConsole.h"
 #include "gvret_comm.h"

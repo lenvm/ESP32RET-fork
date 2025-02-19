@@ -27,10 +27,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef SERIALCONSOLE_H_
 #define SERIALCONSOLE_H_
 
-#include "config.h"
+#include "../config.h"
 #include "sys_io.h"
-#include "ESP32RET.h"
-#include "esp32_can.h"
+#include "../ESP32RET.h"
+#include "lib/esp32_can/src/esp32_can.h"
 
 class SerialConsole {
 public:

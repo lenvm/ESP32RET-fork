@@ -27,17 +27,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include "config.h"
-#include <esp32_can.h>
+#include "src/lib/esp32_can/src/esp32_can.h"
 #include <SPI.h>
-#include <esp32_mcp2517fd.h>
+#include "src/lib/esp32_mcp2515/src/esp32_mcp2515.h"
+#include "src/lib/esp32_mcp2517fd/src/esp32_mcp2517fd.h"
 #include <Preferences.h>
 #include <FastLED.h>
-#include "ELM327_Emulator.h"
-#include "SerialConsole.h"
-#include "wifi_manager.h"
-#include "gvret_comm.h"
-#include "can_manager.h"
-#include "lawicel.h"
+#include "src/ELM327_Emulator.h"
+#include "src/SerialConsole.h"
+#include "src/wifi_manager.h"
+#include "src/gvret_comm.h"
+#include "src/can_manager.h"
+#include "src/lawicel.h"
 
 //on the S3 we want the default pins to be different
 #ifdef CONFIG_IDF_TARGET_ESP32S3
