@@ -1,0 +1,10 @@
+[submodule "ESP32RET/src/lib/esp32_can"]
+	path = ESP32RET/src/lib/esp32_can
+	url = https://github.com/lenvm/esp32_can-fork.git
+[submodule "ESP32RET/src/lib/esp32_mcp2515"]
+	path = ESP32RET/src/lib/esp32_mcp2515
+	url = https://github.com/lenvm/esp32_mcp2515.git
+	branch = develop
+[submodule "ESP32RET/src/lib/esp32_mcp2517fd"]
+	path = ESP32RET/src/lib/esp32_mcp2517fd
+	url = https://github.com/lenvm/esp32_mcp2517fd-fork.git
