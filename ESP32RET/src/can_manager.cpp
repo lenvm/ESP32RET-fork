@@ -40,10 +40,12 @@ void CANManager::setup()
 {
     for (int i = 0; i < SysSettings.numBuses; i++)
     {
+        Serial.printf("Setting up CAN%u\n", i);
         if (settings.canSettings[i].enabled)
         {
             if ((settings.canSettings[i].fdMode == 0) || !canBuses[i]->supportsFDMode())
             {
+                Serial.printf("CAN%u is not in fdMode\n", i);
                 canBuses[i]->begin(settings.canSettings[i].nomSpeed);
                 Serial.printf("Enabled CAN%u with speed %u\n", i, settings.canSettings[i].nomSpeed);
                 if ( (i == 0) && (settings.systemType == 2) )
@@ -61,14 +63,16 @@ void CANManager::setup()
             }
             else
             {
+                Serial.printf("CAN%u is in fdMode\n", i);
                 canBuses[i]->beginFD(settings.canSettings[i].nomSpeed, settings.canSettings[i].fdSpeed);
-                Serial.printf("Enabled CAN1 In FD Mode With Nominal Speed %u and Data Speed %u", 
-                                settings.canSettings[i].nomSpeed, settings.canSettings[i].fdSpeed);
+                Serial.printf("Enabled CAN%u in FD Mode With Nominal Speed %u and Data Speed %u\n", 
+                                i, settings.canSettings[i].nomSpeed, settings.canSettings[i].fdSpeed);
                 canBuses[i]->enable();
             }
 
             if (settings.canSettings[i].listenOnly) 
             {
+                Serial.printf("CAN%u is listen only\n", i);
                 canBuses[i]->setListenOnlyMode(true);
             }
             else
@@ -79,6 +83,7 @@ void CANManager::setup()
         } 
         else
         {
+            Serial.printf("Disabled CAN%u\n", i);
             canBuses[i]->disable();
         }
     }
